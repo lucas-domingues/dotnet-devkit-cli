@@ -1,7 +1,5 @@
 # DevKit CLI 🚀
 
-# DevKit CLI 🚀
-
 [![.NET Build](https://github.com/lucas-domingues/dotnet-devkit-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/lucas-domingues/dotnet-devkit-cli/actions)
 [![NuGet](https://img.shields.io/nuget/v/DevKit.CLI.svg)](https://www.nuget.org/packages/DevKit.CLI)
 
