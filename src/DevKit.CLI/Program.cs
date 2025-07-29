@@ -11,7 +11,7 @@ helloCommand.SetHandler(() =>
 rootCommand.AddCommand(helloCommand);
 
 // Novo comando: `new ddd <projectName>`
-var newDddCommand = new Command("new-ddd", "Cria uma estrutura DDD básica");
+var newDddCommand = new Command("new-ddd", "Cria uma estrutura DDD básica.");
 
 var nameArgument = new Argument<string>("projectName", "Nome do projeto");
 newDddCommand.AddArgument(nameArgument);
