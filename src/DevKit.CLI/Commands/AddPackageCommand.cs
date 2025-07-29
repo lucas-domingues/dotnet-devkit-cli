@@ -1,47 +1,47 @@
-﻿using System.Diagnostics;
-using Spectre.Console;
-using Spectre.Console.Cli;
-using System.ComponentModel;
+﻿using DevKit.CLI.Helpers;
+using System.Diagnostics;
 
-public class AddPackageCommand : Command<AddPackageCommand.Settings>
+namespace DevKit.CLI.Commands;
+
+public static class AddPackageCommand
 {
-    public class Settings : CommandSettings
+    public static void Execute(string[] args)
     {
-        [CommandArgument(0, "<packages>")]
-        [Description("Nome(s) do(s) pacote(s) a serem adicionados")]
-        public string[] Packages { get; set; }
-
-        [CommandOption("-v|--version <version>")]
-        [Description("Versão específica do pacote (opcional, vale para todos os pacotes)")]
-        public string Version { get; set; }
-    }
-
-    public override int Execute(CommandContext context, Settings settings)
-    {
-        if (!File.Exists("*.csproj") && Directory.GetFiles(Directory.GetCurrentDirectory(), "*.csproj").Length == 0)
+        if (args.Length < 1)
         {
-            AnsiConsole.MarkupLine("[red]Nenhum arquivo .csproj encontrado no diretório atual.[/]");
-            return 1;
+            ConsoleHelper.PrintError("Uso inválido do comando add-package.");
+            ConsoleHelper.PrintInfo("Exemplo: devkit add-package Serilog");
+            return;
         }
 
-        foreach (var package in settings.Packages)
+        var packageName = args[0];
+        ConsoleHelper.PrintInfo($"Adicionando pacote NuGet: {packageName}");
+
+        var psi = new ProcessStartInfo
         {
-            string args = $"add package {package}";
-            if (!string.IsNullOrWhiteSpace(settings.Version))
-                args += $" --version {settings.Version}";
+            FileName = "dotnet",
+            Arguments = $"add package {packageName}",
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
 
-            var process = Process.Start(new ProcessStartInfo
-            {
-                FileName = "dotnet",
-                Arguments = args,
-                RedirectStandardOutput = true,
-                UseShellExecute = false
-            });
+        var process = Process.Start(psi);
+        process.WaitForExit();
 
-            process.WaitForExit();
-            AnsiConsole.MarkupLine($"[green]Pacote [bold]{package}[/] adicionado com sucesso.[/]");
+        var output = process.StandardOutput.ReadToEnd();
+        var error = process.StandardError.ReadToEnd();
+
+        if (process.ExitCode == 0)
+        {
+            ConsoleHelper.PrintSuccess($"Pacote \"{packageName}\" adicionado com sucesso!");
+            Console.WriteLine(output);
         }
-
-        return 0;
+        else
+        {
+            ConsoleHelper.PrintError("Erro ao adicionar o pacote:");
+            Console.WriteLine(error);
+        }
     }
 }
