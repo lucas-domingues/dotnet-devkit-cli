@@ -15,7 +15,7 @@ Utilitário de linha de comando para acelerar tarefas no desenvolvimento .NET, c
 ## Instalação (desenvolvimento)
 
 ```bash
-git clone https://github.com/seu-usuario/devkit.cli.git
-cd devkit.cli
+git clone https://github.com/lucas-domingues/dotnet-devkit-cli.git
+cd dotnet-devkit-cli
 dotnet run --project src/DevKit.CLI -- hello
 
